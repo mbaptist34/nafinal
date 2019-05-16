@@ -16,6 +16,9 @@ libgtest.a:
 quat_test: $(SOURCES) $(OBJECTS) libgtest.a
 	$(CC) $(GTEST_FLAGS) -pthread src/quat_test.cpp libgtest.a src/quat.o -o quat_test
 
+physics: $(SOURCES) $(OBJECTS)
+	$(CC) src/physics.cpp src/quat.o -o physics
+
 runAllTests: quat_test
 	./quat_test
 
