@@ -62,6 +62,8 @@ public:
   
   vec3 rot(const vec3 &u) const;
   
+  quat slerp(const quat &u, const double t) const;
+  
   void toEulerAngles(double& Z,
                      double& Y,
                      double& X);

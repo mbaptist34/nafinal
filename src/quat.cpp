@@ -145,13 +145,33 @@ vec3 quat::rot(const vec3 &u) const {
   return r.v;
 }
 
+/* Slerp from this quat to u */
+quat quat::slerp(const quat &u, const double t) const {
+  const quat& v = *this;
+  double costh = v.s * u.s + v.v[0] * u.v[0] + v.v[1] * u.v[1] +
+                 v.v[2] * u.v[2];
+  double theta = acos(costh);
+  double sinth = sin(theta);
+  
+  double t1 = sin((1 - t) * theta) / sinth;
+  double t2 = sin(t * theta) / sinth;
+  
+  quat w;
+  w.s = t1 * v.s + t2 * u.s;
+  w.v[0] = t1 * v.v[0] + t2 * u.v[0];
+  w.v[1] = t1 * v.v[1] + t2 * u.v[1];
+  w.v[2] = t1 * v.v[2] + t2 * u.v[2];
+  
+  return w;
+}
+
 void quat::toEulerAngles(double& Z,
                          double& Y,
                          double& X) {
   /* Potential Stability Issues */
-  Z = atan2(2(s * v[0] + v[1] * v[2]), 1 - 2(v[0]*v[0] + v[1]*v[1]));
-  Y = asin(2(s * v[1] - v[2] * v[0]));
-  X = atan2(2(s * v[2] + v[0] * v[1]), 1 - 2(v[1]*v[1] + v[2]*v[2]));
+  Z = atan2(2 * (s * v[0] + v[1] * v[2]), 1 - 2 * (v[0]*v[0] + v[1]*v[1]));
+  Y = asin(2 * (s * v[1] - v[2] * v[0]));
+  X = atan2(2 * (s * v[2] + v[0] * v[1]), 1 - 2 * (v[1]*v[1] + v[2]*v[2]));
 }
 
 void quat::fromEulerAngles(const double Z,
